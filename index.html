@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="app-version" content="1.0.0" />
+    <meta name="description" content="Rollverse — a 3D endless rolling-ball arcade adventure. Steer, jump and roll through infinite procedurally generated levels." />
+    <meta name="theme-color" content="#0b1026" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Rollverse — 3D Rolling Adventure</title>
+    <script type="module" crossorigin src="./assets/index-CVnlsw5g.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DebdTSTE.css">
+  </head>
+  <body>
+    <div id="app">
+      <div id="gl-holder"><canvas id="gl"></canvas></div>
+
+      <div id="ui">
+        <!-- Loading -->
+        <div class="screen visible" id="screen-loading">
+          <div class="loader-ball"></div>
+          <p class="loading-text">ROLLVERSE</p>
+        </div>
+
+        <!-- Main menu -->
+        <div class="screen" id="screen-menu">
+          <div class="menu-top">
+            <div class="pill" id="menu-gems">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M12 2 20 9 12 22 4 9Z" fill="currentColor" opacity=".9"/><path d="M12 2 20 9 12 13 4 9Z" fill="#fff" opacity=".35"/></svg>
+              <span id="menu-gems-value">0</span>
+            </div>
+            <button class="icon-btn" id="btn-settings" aria-label="Settings">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4-2.1-.5.6-2-1.5-1.5-2 .6L15.5 7l-.5-2.1h-2.1L12.4 7l-2-.6L8.9 8l.6 2L7.5 10.5 7 12l.5 1.5 2 .5-.6 2 1.5 1.5 2-.6.5 2.1h2.1l.5-2.1 2 .6 1.5-1.5-.6-2 2.1-.5Z" fill="currentColor" opacity=".9"/></svg>
+            </button>
+          </div>
+          <div class="menu-mid">
+            <h1 class="logo">ROLL<span>VERSE</span></h1>
+            <p class="tagline">Roll through infinite worlds</p>
+          </div>
+          <div class="menu-bottom">
+            <div class="level-chip"><span id="menu-level-label">LEVEL 1</span><span class="world-dot" id="menu-world-dot"></span><span id="menu-world-name">Dawn Ridge</span></div>
+            <button class="btn-primary" id="btn-play">PLAY</button>
+            <button class="btn-secondary" id="btn-gems-ad">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18v3H3zM5 9h14l-1.5 11h-11zM9 3h2v3H9zM13 3h2v3h-2z" fill="currentColor"/></svg>
+              FREE GEMS
+              <span class="ad-badge">AD</span>
+            </button>
+          </div>
+          <p class="menu-version" id="menu-version">v1.0.0</p>
+        </div>
+
+        <!-- HUD -->
+        <div class="screen hud" id="hud">
+          <div class="hud-top">
+            <button class="icon-btn" id="btn-pause" aria-label="Pause">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z" fill="currentColor"/></svg>
+            </button>
+            <div class="hud-center">
+              <div class="level-pill" id="hud-level">LEVEL 1</div>
+              <div class="progress"><div class="progress-fill" id="progress-fill"></div><div class="progress-cp" id="progress-cp"></div></div>
+            </div>
+            <div class="pill" id="hud-gems">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M12 2 20 9 12 22 4 9Z" fill="currentColor" opacity=".9"/><path d="M12 2 20 9 12 13 4 9Z" fill="#fff" opacity=".35"/></svg>
+              <span id="hud-gems-value">0</span>
+            </div>
+          </div>
+          <div class="hint hidden" id="tutorial-hint">Drag to steer &nbsp;·&nbsp; stay on the track</div>
+        </div>
+
+        <!-- Pause -->
+        <div class="screen modal" id="screen-pause">
+          <div class="panel">
+            <h2>PAUSED</h2>
+            <div class="row-buttons">
+              <button class="btn-primary" id="btn-resume">RESUME</button>
+              <button class="btn-secondary" id="btn-restart">RESTART</button>
+              <button class="btn-secondary" id="btn-home">MENU</button>
+              <button class="btn-secondary" id="btn-sound-toggle">SOUND: ON</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fail -->
+        <div class="screen modal" id="screen-fail">
+          <div class="panel">
+            <h2>WIPEOUT!</h2>
+            <p class="sub" id="fail-stats">Level 1 · 42% complete</p>
+            <div class="row-buttons">
+              <button class="btn-primary" id="btn-retry">TRY AGAIN</button>
+              <button class="btn-secondary" id="btn-revive">REVIVE AT CHECKPOINT<span class="ad-badge">AD</span></button>
+              <button class="btn-tertiary" id="btn-fail-home">MENU</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Win -->
+        <div class="screen modal" id="screen-win">
+          <div class="panel">
+            <h2>LEVEL COMPLETE!</h2>
+            <div class="stars"><span id="star1">★</span><span id="star2">★</span><span id="star3">★</span></div>
+            <p class="sub" id="win-stats">+38 gems</p>
+            <div class="row-buttons">
+              <button class="btn-primary" id="btn-next">NEXT LEVEL</button>
+              <button class="btn-secondary" id="btn-double">DOUBLE GEMS<span class="ad-badge">AD</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="screen modal" id="screen-settings">
+          <div class="panel">
+            <h2>SETTINGS</h2>
+            <div class="setting-row"><span>Sound effects</span><button class="toggle on" id="tg-sound"><i></i></button></div>
+            <div class="setting-row"><span>Music</span><button class="toggle on" id="tg-music"><i></i></button></div>
+            <div class="setting-row"><span>Haptics</span><button class="toggle on" id="tg-haptics"><i></i></button></div>
+            <div class="setting-row"><span>Reset progress</span><button class="btn-danger" id="btn-reset">RESET</button></div>
+            <p class="sub">How to play: drag left / right to steer the ball, dodge obstacles, grab gems and reach the portal.</p>
+            <p class="sub version" id="settings-version">Rollverse v1.0.0</p>
+            <button class="btn-primary" id="btn-settings-close">DONE</button>
+          </div>
+        </div>
+
+        <!-- Simulated ad overlay (web build) -->
+        <div class="screen ad" id="screen-ad">
+          <div class="ad-frame">
+            <p class="ad-title" id="ad-kind">AD</p>
+            <p class="ad-sub">Simulated placement — AdMob renders here in the iOS build</p>
+            <div class="ad-count" id="ad-count">3</div>
+            <button class="btn-secondary hidden" id="btn-ad-close">CLOSE</button>
+          </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+      </div>
+    </div>
+  </body>
+</html>
